@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  
+  <link rel="shortcut icon" type="image/png" href="https://cdn2.iconfinder.com/data/icons/user-interface-essentials-outline/48/ui-49-512.png"/>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js">
+  </script>
+<link rel="stylesheet" href="/css/customerdata.css" >
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {
+        packages: ['corechart']
+    });
+</script>
+</head>
+<body >
+  <form id="idForm" align="left" action="/search" method="POST" >
+    TWITTER HANDLER: <input type="text" id="handler" name="handler">
+    <input type="submit"><br>
+    
+  </form>
+<div  class="main">
+ <center><h1>TWEETS</h1></center> 
+ <table   id="myTable" class="display responsive nowrap" style="width:100%">
+    <caption><b>TWEET LIST</b></caption>
+    <thead>
+    <tr>
+        <td> <b>TWEET </b> </td>
+    </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td> <b>TWEET </b> </td>
+        </tr>
+    </tfoot>
+    <tbody>
+      <% if(data==undefined) { %>
+        <tr>
+          <b>no data</b>
+        </tr>
+        <%} else { %>
+          <% for (var i =0; i < data.statuses.length;  i++ ) { %>
+            <tr>
+              <td> <b><%= data.statuses[i].text %> </b> </td>
+            </tr>
+            <% } %>
+          <% } %>
+  </tbody>
+  </table>
+  <div id="container" style="width: 800px; height: 300px; margin: 0 auto"></div>
+</div>    
+</body>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script>
+  $(document).ready( function () {
+      $('#myTable').DataTable( {
+          scrollY: 300,
+          paging: false
+      } );
+  } );
+  </script>
+<script>
+   $(document).ready(function ()
+    {
+
+        $("button[name='deleteselected']").click(function ()
+         {
+          var r = confirm("Are you sure do you really want to delete these customers ?");
+          if(r==true)
+          {
+
+            var favorite = [];
+             $.each($("input[name='checkdelete']:checked"), function ()
+              {
+                 favorite.push($(this).val());
+
+        //Prevent the default submit
+              });
+                   $.ajax({
+                   type: 'POST',
+                   url: '/deleteemploye',
+                   data: { data: favorite},
+                   success: function (dataa) {
+                   console.log("data is :" + dataa)
+                   if (dataa === "noerror")
+                    {
+                       location.href = "/whatsappdatafetch?msg=deleted successfully"
+                    }
+
+          // location.reload(true);
+          // res.redirect('/customerdatafetch?msg=deleted successfully');        
+        }
+      });
+    }
+    else{
+     var txt = "You pressed Cancel!";
+    }
+    });
+    
+  });
+
+
+  $('#select_all').click(function () {
+    if (this.checked) {
+      $("input[name='checkdelete']").each(function () {
+        this.checked = true;
+      });
+    } else {
+      $("input[name='checkdelete']").each(function () {
+        this.checked = false;
+      });
+    }
+
+
+  });
+  </script>
+   <script language="JavaScript">
+      var name = "<%= weeks %>";
+  
+    function drawChart() {
+        /* Define the chart to be drawn.*/
+        var data = google.visualization.arrayToDataTable([
+            ['Page Vist', 'twitter data'],
+            ['day6',Number(name[5])],
+            ['day5',Number (name[4])],
+            ['day4', Number (name[3])],
+            ['day3',Number (name[2])],
+            ['day2',Number (name[1])],
+            ['day1',Number (name[0])]
+        ]);
+        var options = {
+            title: 'weekly data',
+            isStacked: true
+        };
+        /* Instantiate and draw the chart.*/
+        var chart = new google.visualization.BarChart(document.getElementById('container'));
+        chart.draw(data, options);
+    }
+    google.charts.setOnLoadCallback(drawChart);
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
