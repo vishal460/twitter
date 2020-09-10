@@ -61,9 +61,7 @@ const qwerty=(req,res,next) => {
   
 }
 app.use(qwerty) 
-app.get('/show',(req,res)=>{
-    res.render('tweets.ejs')
-  })
+
   
 app.use('',whatsapps)
 app.use(morgan('dev'))
